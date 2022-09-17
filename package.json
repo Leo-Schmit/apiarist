@@ -83,7 +83,7 @@
       {
         "command": "selector.collapse",
         "title": "Collapse",
-        "icon": "$(search-collapse-results)"
+        "icon": "$(collapse-all)"
       },
       {
         "command": "selector.changeTitle",
@@ -101,7 +101,7 @@
       {
         "command": "apiaristViewer.collapse",
         "title": "Collapse",
-        "icon": "$(search-collapse-results)"
+        "icon": "$(collapse-all)"
       },
       {
         "command": "apiaristViewer.reRenderModule",
