@@ -1,0 +1,71 @@
+apiarist_version: 1
+
+viewer:
+  - call: ApiaristViewerProvider
+    path: src/treeDataProviders/ApiaristViewerProvider.ts
+    children:
+      - call: ApiaristViewerProvider.getChildren
+        name: getChildren
+        children:
+          - call: ApiaristViewerProvider.parseIcons
+            name: parseIcons
+          - call: ApiaristViewerProvider.parseYmlFile
+            name: parseYmlFile
+            children:
+              - call: parseYml
+                path: src/services/parseYml.ts
+              - call: ApiaristViewerProvider.replaceChildren
+                name: replaceChildren
+              - call: ApiaristViewerProvider.addLevelAndPath
+                name: addLevelAndPath
+
+      - call: ApiaristViewerProvider.getTreeItem
+        name: getTreeItem
+      - call: ApiaristViewerProvider.collapse
+        name: collapse
+      - call: ApiaristViewerProvider.refresh
+        name: refresh
+
+  - call: ApiaristViewer
+    path: src/apiaristViewer.ts
+    children:
+      - call: ApiaristViewer.registerCommands
+        name: registerCommands
+      - call: ApiaristViewer.openFile
+        name: openFile
+        children:
+          - call: ApiaristViewer.searchInDocSymbols
+            name: searchInDocSymbols
+          - call: ApiaristViewer.parseDoc
+            name: parseDoc
+      - call: ApiaristViewer.refresh
+        name: refresh
+      - call: ApiaristViewer.reRenderModule
+        name: reRenderModule
+      - call: ApiaristViewer.collapse
+        name: collapse
+
+  - name: Apiarist routes
+    path: apiarist/routes.yaml
+    children:
+      - name: viewer
+        path: apiarist/apiaristViewer.yaml
+      - call: icons
+        path: apiarist/icons.yaml
+  - name: package.json
+    path: package.json
+    status: collapsed
+    children:
+      - call: activationEvents.0
+        name: activationEvents
+      - call: contributes.configuration.properties
+        name: configuration properties
+        children:
+          - call: contributes.configuration.properties.apiarist\.directory
+            name: Apiarist.directory
+      - call: contributes.views.Apiarist.1
+        name: views
+      - call: contributes.menus.view/title
+        name: menus.view/title
+  - call: Extension
+    path: src/extension.ts

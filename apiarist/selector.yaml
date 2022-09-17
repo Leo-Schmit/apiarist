@@ -1,0 +1,42 @@
+apiarist_version: 1
+
+viewer:
+  - name: SelectorProvider
+    path: src/treeDataProviders/SelectorProvider.ts
+    children:
+      - call: SelectorProvider.getChildren
+        name: getChildren
+        children:
+          - call: parseYml
+            path: src/services/parseYml.ts
+          - call: SelectorProvider.parseRoutes
+            name: parseRoutes
+      - call: SelectorProvider.getTreeItem
+        name: getTreeItem
+  - call: Selector
+    path: src/selector.ts
+    children:
+      - call: Selector.registerCommands
+        name: registerCommands
+      - call: Selector.createSamples
+        name: createSamples
+      - call: Selector.changeTitle
+        name: changeTitle
+      - call: Selector.openFile
+        name: openFile
+      - call: Selector.collapse
+        name: collapse
+      - call: Selector.refresh
+        name: refresh
+  - call: viewer
+    name: selector
+    path: apiarist/selector.yaml
+  - call: name
+    name: package.json
+    path: package.json
+    status: collapsed
+    children:
+      - call: contributes.views.apiarist.0
+        name: views
+      - call: contributes.menus.view/title
+        name: menus.view/title

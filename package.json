@@ -1,0 +1,164 @@
+{
+  "name": "apiarist",
+  "displayName": "Apiarist",
+  "description": "Found a bug in Apiarist? Please let us know via github issues.",
+  "icon": "media/icon-market.png",
+  "version": "0.0.1",
+  "publisher": "LeoSchmit",
+  "private": true,
+  "license": "Apache License 2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Leo-Schmit/apiarist"
+  },
+  "bugs": {
+    "url": "https://github.com/Leo-Schmit/apiarist/issues"
+  },
+  "badges": [
+    {
+      "url": "https://img.shields.io/discord/1020001388039778418",
+      "href": "https://discord.gg/VVNv34Kz5c",
+      "description": "Join us in Discord"
+    }
+  ],
+  "engines": {
+    "vscode": "^1.66.0"
+  },
+  "categories": [
+    "Visualization"
+  ],
+  "activationEvents": [
+    "onView:selector",
+    "onView:apiaristViewer"
+  ],
+  "main": "./out/extension.js",
+  "browser": "./out/web/extension.js",
+  "contributes": {
+    "viewsWelcome": [
+      {
+        "view": "selector",
+        "contents": "Directory \"apiarist\" not found.\n[Create with samples](command:selector.createSamples)",
+        "when": "apiarist.no_directory"
+      }
+    ],
+    "configuration": {
+      "title": "Apiarist",
+      "properties": {
+        "apiarist.directory": {
+          "type": "string",
+          "default": "apiarist"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "apiaristViewer",
+          "title": "Apiarist",
+          "icon": "media/icon.png"
+        }
+      ]
+    },
+    "views": {
+      "apiaristViewer": [
+        {
+          "id": "selector",
+          "name": "Selector"
+        },
+        {
+          "id": "apiaristViewer",
+          "name": "Viewer"
+        }
+      ]
+    },
+    "capabilities": {
+      "workspaceSymbolProvider": "true"
+    },
+    "commands": [
+      {
+        "command": "selector.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "selector.collapse",
+        "title": "Collapse",
+        "icon": "$(search-collapse-results)"
+      },
+      {
+        "command": "selector.changeTitle",
+        "title": "ChangeTitle"
+      },
+      {
+        "command": "selector.createSamples",
+        "title": "createDirectory"
+      },
+      {
+        "command": "apiaristViewer.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "apiaristViewer.collapse",
+        "title": "Collapse",
+        "icon": "$(search-collapse-results)"
+      },
+      {
+        "command": "apiaristViewer.reRenderModule",
+        "title": "reRenderModule",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "apiaristViewer.openFile",
+        "title": "Open File"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "apiaristViewer.refresh",
+          "when": "view == apiaristViewer",
+          "group": "navigation@0"
+        },
+        {
+          "command": "apiaristViewer.collapse",
+          "when": "view == apiaristViewer",
+          "group": "navigation@1"
+        },
+        {
+          "command": "selector.refresh",
+          "when": "view == selector",
+          "group": "navigation@0"
+        },
+        {
+          "command": "selector.collapse",
+          "when": "view == selector",
+          "group": "navigation@1"
+        }
+      ],
+      "view/item/context": []
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint . --ext .ts,.tsx"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.66.0",
+    "@typescript-eslint/eslint-plugin": "^5.30.0",
+    "@typescript-eslint/parser": "^5.30.0",
+    "@vscode/test-web": "^0.0.30",
+    "eslint": "^8.13.0",
+    "process": "^0.11.10",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.7.2",
+    "webpack": "^5.74",
+    "webpack-cli": "^4.10"
+  },
+  "dependencies": {
+    "path-browserify": "^1.0.1",
+    "yaml": "^2.1.1"
+  }
+}

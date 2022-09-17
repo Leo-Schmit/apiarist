@@ -1,0 +1,8 @@
+apiarist_version: 1
+
+title: Routes
+routes:
+  - name: Selector
+    id: selector.yaml
+  - name: ApiaristViewer
+    id: apiaristViewer.yaml
