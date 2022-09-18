@@ -1,4 +1,3 @@
-import * as path from "path";
 import {
   commands,
   Event,
@@ -8,11 +7,12 @@ import {
   TreeItem,
   TreeItemCollapsibleState,
   Uri,
-  workspace,
   window,
+  workspace,
 } from "vscode";
 import { parse } from "yaml";
 import { SelectorEntry } from "../interfaces/selectorEntryInterface";
+import { getWorkspaceDirectory } from "../services/getWorkspaceDirectory";
 import { isFileExist } from "../services/isFileExist";
 import { parseYml } from "../services/parseYml";
 
@@ -52,26 +52,22 @@ export class SelectorProvider implements TreeDataProvider<SelectorEntry> {
   };
 
   private async parseRoutes() {
-    if (!workspace.workspaceFolders || workspace.workspaceFolders.length === 0) {
-      window.showErrorMessage(`Please open any folder first.`);
-      return null;
+    const workspaceDirectory = getWorkspaceDirectory();
+    if (!workspaceDirectory) {
+      return;
     }
-
-    const apiaristPath = path.join(
-      workspace.workspaceFolders[0].uri.fsPath,
-      workspace.getConfiguration().get("apiarist.directory")
-    );
+    const apiaristPath = Uri.joinPath(workspaceDirectory, workspace.getConfiguration().get("apiarist.directory"));
 
     let fileExist = await isFileExist(apiaristPath);
     if (!fileExist) {
       commands.executeCommand("setContext", "apiarist.no_directory", true);
     }
-    const routesPath = path.join(apiaristPath, "routes.yaml");
+    const routesPath = Uri.joinPath(apiaristPath, "routes.yaml");
     fileExist = await isFileExist(routesPath);
     if (!fileExist) {
       return null;
     }
-    const file = await workspace.fs.readFile(Uri.file(routesPath));
+    const file = await workspace.fs.readFile(routesPath);
 
     const yml = parse(String.fromCharCode.apply(null, file));
     const moduleFiles = [];

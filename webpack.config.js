@@ -13,9 +13,6 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts"],
-    fallback: {
-      path: require.resolve("path-browserify"),
-    },
   },
   module: {
     rules: [

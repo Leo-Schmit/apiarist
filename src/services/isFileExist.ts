@@ -1,8 +1,8 @@
 import { workspace, Uri } from "vscode";
 
-export const isFileExist = async (filepath: string) => {
+export const isFileExist = async (filepath: Uri) => {
   try {
-    await workspace.fs.stat(Uri.parse(filepath));
+    await workspace.fs.stat(filepath);
   } catch (err) {
     return false;
   }

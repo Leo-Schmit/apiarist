@@ -3,7 +3,7 @@
   "displayName": "Apiarist",
   "description": "Found a bug in Apiarist? Please let us know via github issues.",
   "icon": "media/icon-market.png",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "publisher": "LeoSchmit",
   "private": true,
   "license": "Apache License 2.0",

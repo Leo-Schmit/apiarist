@@ -1,4 +1,3 @@
-import * as path from "path";
 import {
   commands,
   DocumentSymbol,
@@ -6,9 +5,12 @@ import {
   Selection,
   TextDocument,
   TextEditor,
-  TextEditorRevealType, window,
+  TextEditorRevealType,
+  Uri,
+  window,
   workspace
 } from "vscode";
+import { getWorkspaceDirectory } from "./services/getWorkspaceDirectory";
 import { isFileExist } from "./services/isFileExist";
 import { sleep } from "./services/sleep";
 import { ApiaristViewerProvider } from "./treeDataProviders/apiaristViewerProvider";
@@ -31,7 +33,7 @@ export class ApiaristViewer {
   }
 
   private async parseDoc(resourcePath: string): Promise<[TextEditor, DocumentSymbol[], TextDocument]> {
-    const documentPath = path.join(workspace.workspaceFolders[0].uri.fsPath, resourcePath);
+    const documentPath = Uri.joinPath(getWorkspaceDirectory(), resourcePath);
     const fileExist = await isFileExist(documentPath);
     if (!fileExist) {
       window.showErrorMessage(`No such file or directory, open ${documentPath}`);

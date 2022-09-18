@@ -1,4 +1,3 @@
-import * as path from "path";
 import {
   commands,
   Event,
@@ -8,10 +7,11 @@ import {
   TreeItem,
   TreeItemCollapsibleState,
   Uri,
-  workspace,
+  workspace
 } from "vscode";
 import { parse } from "yaml";
 import { ViewerEntry } from "../interfaces/viewerEntryInterface";
+import { getWorkspaceDirectory } from "../services/getWorkspaceDirectory";
 import { isFileExist } from "../services/isFileExist";
 import { parseYml } from "../services/parseYml";
 
@@ -19,10 +19,10 @@ export class ApiaristViewerProvider implements TreeDataProvider<ViewerEntry> {
   private treeItems: ViewerEntry[][];
   private _onDidChangeTreeData: EventEmitter<any[] | undefined> = new EventEmitter<any[] | undefined>();
   public onDidChangeTreeData: Event<any> = this._onDidChangeTreeData.event;
-  ymlPath: any;
+  ymlPath: Uri;
   vscodeIcons: [][];
   iconsFiles: [][];
-  apiaristPath: string;
+  apiaristPath: Uri;
 
   private replaceChildren(yml: string | any[]) {
     for (let i = 0; i < yml.length; i++) {
@@ -59,8 +59,8 @@ export class ApiaristViewerProvider implements TreeDataProvider<ViewerEntry> {
     }
   }
 
-  private async parseYmlFile(ymlPath: string) {
-    const file = await workspace.fs.readFile(Uri.file(ymlPath));
+  private async parseYmlFile(ymlPath: Uri) {
+    const file = await workspace.fs.readFile(ymlPath);
     const yml = parse(String.fromCharCode.apply(null, file));
     const tree: ViewerEntry[][] = [];
     yml["viewer"].forEach((el: { children: any[] }) => parseYml(el, 0, tree));
@@ -70,14 +70,14 @@ export class ApiaristViewerProvider implements TreeDataProvider<ViewerEntry> {
     return tree;
   }
 
-  private async parseIcons(apiaristPath: string) {
-    const iconsPath = path.join(apiaristPath, "icons.yaml");
+  private async parseIcons(apiaristPath: Uri) {
+    const iconsPath = Uri.joinPath(apiaristPath, "icons.yaml");
     const vscodeIcons = [];
     const iconsFiles = [];
 
     const fileExist1 = await isFileExist(iconsPath);
     if (fileExist1) {
-      const fileTypes = await workspace.fs.readFile(Uri.file(iconsPath));
+      const fileTypes = await workspace.fs.readFile(iconsPath);
       const ymlTypes = parse(String.fromCharCode.apply(null, fileTypes));
       ymlTypes["icons"].forEach((el) => {
         if (el.icon) {
@@ -107,10 +107,8 @@ export class ApiaristViewerProvider implements TreeDataProvider<ViewerEntry> {
       return [];
     }
 
-    this.apiaristPath = path.join(
-      workspace.workspaceFolders[0].uri.fsPath,
-      workspace.getConfiguration().get("apiarist.directory")
-    );
+    const workspaceDirectory = getWorkspaceDirectory();
+    this.apiaristPath = Uri.joinPath(workspaceDirectory, workspace.getConfiguration().get("apiarist.directory"));
 
     [this.vscodeIcons, this.iconsFiles] = await this.parseIcons(this.apiaristPath);
 
@@ -134,8 +132,8 @@ export class ApiaristViewerProvider implements TreeDataProvider<ViewerEntry> {
       treeItem.iconPath = new (ThemeIcon as any)(this.vscodeIcons[element.icon]);
     } else if (element.icon && this.iconsFiles[element.icon]) {
       const icon = {
-        light: Uri.file(path.join(this.apiaristPath, "icons", this.iconsFiles[element.icon]["light"])),
-        dark: Uri.file(path.join(this.apiaristPath, "icons", this.iconsFiles[element.icon]["dark"])),
+        light: Uri.joinPath(this.apiaristPath, "icons", this.iconsFiles[element.icon]["light"]),
+        dark: Uri.joinPath(this.apiaristPath, "icons", this.iconsFiles[element.icon]["dark"]),
       };
       treeItem.iconPath = icon;
     }
@@ -155,7 +153,7 @@ export class ApiaristViewerProvider implements TreeDataProvider<ViewerEntry> {
 
   refresh(ymlPath = null): void {
     if (ymlPath) {
-      this.ymlPath = ymlPath;
+      this.ymlPath = Uri.parse(ymlPath);
     }
     this._onDidChangeTreeData.fire(null);
   }
