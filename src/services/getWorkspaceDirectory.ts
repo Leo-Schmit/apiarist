@@ -1,7 +1,7 @@
 import { Uri, workspace } from "vscode";
 
 export const getWorkspaceDirectory = () => {
-  if (!workspace.workspaceFolders || workspace.workspaceFolders.length === 0) {
+  if (!workspace.workspaceFolders || workspace.workspaceFolders.length === 0 || !workspace.workspaceFolders[0]) {
     return null;
   }
 
