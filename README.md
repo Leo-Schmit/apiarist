@@ -1,7 +1,7 @@
 <h1 align="center">
   Make Legacy Code Readable Without Touching The Code, Just Using .yaml
   <br><br>
-    <img src="https://raw.githubusercontent.com/Leo-Schmit/Apiarist/main/media/before-after.png" width="550">
+    <img src="https://raw.githubusercontent.com/Leo-Schmit/Apiarist/main/media/main.png" width="550">
 </h1>
 
 <a href="https://discord.gg/VVNv34Kz5c"><img src="https://img.shields.io/discord/1020001388039778418"></a>
